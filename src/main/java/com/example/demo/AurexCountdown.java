@@ -36,16 +36,16 @@ public class AurexCountdown extends JavaPlugin {
         getCommand("countdown").setExecutor(new CountdownCommand(this));
         getCommand("countdownadmin").setExecutor(new CountdownAdminCommand(this));
         getLogger().info("AurexCountdown has been enabled.");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "\n" +
-                "&d               _    _   ______  _______  __   __  _____  \n" +
-                "&d              | |  | | |  ____||__   __||  \\ | ||_   _| \n" +
-                "&d              | |  | | | |__      | |   |   \\| |  | |   \n" +
-                "&d              | |  | | |  __|     | |   | |\\   |  | |   \n" +
-                "&d              | |__| | | |____    | |   | | \\  | _| |_  \n" +
-                "&d               \\____/  |______|   |_|   |_|  \\_||_____| \n" +
-                "&d                                                      \n" +
-                "&7               &lAurex Plugins - &fCountdown v1.0\n" +
-                "&7                      &fBy Aurelian\n"));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', """
+                  &d█████╗ ██╗   ██╗██████╗ ███████╗██╗  ██╗
+                  &d██╔══██╗██║   ██║██╔══██╗██╔════╝╚██╗██╔╝
+                  &d███████║██║   ██║██████╔╝█████╗   ╚███╔╝
+                  &d██╔══██║██║   ██║██╔══██╗██╔══╝   ██╔██╗
+                  &d██║  ██║╚██████╔╝██║  ██║███████╗██╔╝ ██╗
+                  &d╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
+                  &7               &lAurexCountdown
+                  &7             Developed By itzSD, Aurex Studios
+"""));
     }
 
     @Override
@@ -355,6 +355,17 @@ class CountdownAdminCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You don't have permission to do that.");
             return true;
         }
+        if (args.length == 0) {
+            sendUsage(sender);
+            return true;
+        }
+        
+        if (args[0].equalsIgnoreCase("reload")) {
+            plugin.loadConfig();
+            sender.sendMessage(plugin.getCountdownReloadedMsg());
+            return true;
+        }
+
         if (args.length < 2) {
             sendUsage(sender);
             return true;
@@ -434,5 +445,6 @@ class CountdownAdminCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.GOLD + "/countdownadmin pause <player>");
         sender.sendMessage(ChatColor.GOLD + "/countdownadmin resume <player>");
         sender.sendMessage(ChatColor.GOLD + "/countdownadmin reset <player>");
+        sender.sendMessage(ChatColor.GOLD + "/countdownadmin reload");
     }
 }

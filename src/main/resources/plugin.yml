@@ -1,0 +1,28 @@
+name: AurexCountdown
+version: 1.0
+main: com.example.demo.AurexCountdown
+api-version: 1.21
+description: A simple countdown plugin for players.
+commands:
+  countdown:
+    description: Player countdown commands.
+    aliases: [aurexcd]
+  countdownadmin:
+    description: Admin countdown commands.
+    aliases: [aurexcdadmin]
+permissions:
+  countdown.start:
+    description: Allows a player to start a countdown.
+    default: true
+  countdown.pause:
+    description: Allows a player to pause their countdown.
+    default: true
+  countdown.resume:
+    description: Allows a player to resume their countdown.
+    default: true
+  countdown.reset:
+    description: Allows a player to reset their countdown.
+    default: true
+  countdown.admin:
+    description: Allows an admin to control other players' countdowns.
+    default: op

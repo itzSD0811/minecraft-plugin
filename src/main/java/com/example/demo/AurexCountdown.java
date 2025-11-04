@@ -23,6 +23,11 @@ public class AurexCountdown extends JavaPlugin {
     private final Map<UUID, Countdown> countdowns = new HashMap<>();
     private BarColor bossBarColor;
     private ChatColor textColor;
+    private String countdownStartedMsg;
+    private String countdownFinishedMsg;
+    private String countdownReloadedMsg;
+    private String countdownStartedBossbarMsg;
+    private String countdownFinishedBossbarMsg;
 
     @Override
     public void onEnable() {
@@ -31,6 +36,16 @@ public class AurexCountdown extends JavaPlugin {
         getCommand("countdown").setExecutor(new CountdownCommand(this));
         getCommand("countdownadmin").setExecutor(new CountdownAdminCommand(this));
         getLogger().info("AurexCountdown has been enabled.");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "\n" +
+                "&d               _    _   ______  _______  __   __  _____  \n" +
+                "&d              | |  | | |  ____||__   __||  \\ | ||_   _| \n" +
+                "&d              | |  | | | |__      | |   |   \\| |  | |   \n" +
+                "&d              | |  | | |  __|     | |   | |\\   |  | |   \n" +
+                "&d              | |__| | | |____    | |   | | \\  | _| |_  \n" +
+                "&d               \\____/  |______|   |_|   |_|  \\_||_____| \n" +
+                "&d                                                      \n" +
+                "&7               &lAurex Plugins - &fCountdown v1.0\n" +
+                "&7                      &fBy Aurelian\n"));
     }
 
     @Override
@@ -43,6 +58,7 @@ public class AurexCountdown extends JavaPlugin {
     }
 
     public void loadConfig() {
+        reloadConfig();
         try {
             bossBarColor = BarColor.valueOf(getConfig().getString("bossbar-color", "BLUE").toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -55,6 +71,11 @@ public class AurexCountdown extends JavaPlugin {
             getLogger().warning("Invalid text-color in config.yml. Defaulting to WHITE.");
             textColor = ChatColor.WHITE;
         }
+        countdownStartedMsg = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.countdown-started", "&aCountdown started!"));
+        countdownFinishedMsg = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.countdown-finished", "&cCountdown finished!"));
+        countdownReloadedMsg = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.countdown-reloaded", "&eConfiguration reloaded!"));
+        countdownStartedBossbarMsg = ChatColor.translateAlternateColorCodes('&', getConfig().getString("bossbar-messages.countdown-started", "&aCountdown has started!"));
+        countdownFinishedBossbarMsg = ChatColor.translateAlternateColorCodes('&', getConfig().getString("bossbar-messages.countdown-finished", "&cCountdown has finished!"));
     }
 
     public Map<UUID, Countdown> getCountdowns() {
@@ -67,6 +88,26 @@ public class AurexCountdown extends JavaPlugin {
 
     public ChatColor getTextColor() {
         return textColor;
+    }
+
+    public String getCountdownStartedMsg() {
+        return countdownStartedMsg;
+    }
+
+    public String getCountdownFinishedMsg() {
+        return countdownFinishedMsg;
+    }
+
+    public String getCountdownReloadedMsg() {
+        return countdownReloadedMsg;
+    }
+
+    public String getCountdownStartedBossbarMsg() {
+        return countdownStartedBossbarMsg;
+    }
+
+    public String getCountdownFinishedBossbarMsg() {
+        return countdownFinishedBossbarMsg;
     }
 
     public static String formatTime(long seconds) {
@@ -112,12 +153,14 @@ class Countdown {
     private BukkitTask task;
     private final BossBar bossBar;
     private boolean paused;
+    private final AurexCountdown plugin;
 
     public Countdown(Player player, long time, AurexCountdown plugin) {
+        this.plugin = plugin;
         this.player = player;
         this.totalTime = time;
         this.remainingTime = time;
-        this.bossBar = Bukkit.createBossBar("", plugin.getBossBarColor(), BarStyle.SOLID);
+        this.bossBar = Bukkit.createBossBar(plugin.getCountdownStartedBossbarMsg(), plugin.getBossBarColor(), BarStyle.SOLID);
         this.bossBar.addPlayer(player);
         this.paused = false;
 
@@ -132,8 +175,9 @@ class Countdown {
                     bossBar.setProgress((double) remainingTime / totalTime);
                     remainingTime--;
                 } else {
-                    bossBar.setTitle(plugin.getTextColor() + "Countdown Finished!");
+                    bossBar.setTitle(plugin.getCountdownFinishedBossbarMsg());
                     bossBar.setProgress(0);
+                    player.sendMessage(plugin.getCountdownFinishedMsg());
                     cancel();
                     new BukkitRunnable() {
                         @Override
@@ -226,7 +270,7 @@ class CountdownCommand implements CommandExecutor {
                     return true;
                 }
                 plugin.getCountdowns().put(player.getUniqueId(), new Countdown(player, time, plugin));
-                player.sendMessage(ChatColor.GREEN + "Countdown started!");
+                player.sendMessage(plugin.getCountdownStartedMsg());
                 break;
 
             case "pause":
@@ -270,6 +314,14 @@ class CountdownCommand implements CommandExecutor {
                 countdown.reset();
                 player.sendMessage(ChatColor.BLUE + "Countdown reset.");
                 break;
+            case "reload":
+                 if (!player.hasPermission("countdown.reload")) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to do that.");
+                    return true;
+                }
+                plugin.loadConfig();
+                player.sendMessage(plugin.getCountdownReloadedMsg());
+                break;
 
             default:
                 sendUsage(player);
@@ -285,6 +337,7 @@ class CountdownCommand implements CommandExecutor {
         player.sendMessage(ChatColor.GOLD + "/countdown pause - Pause your countdown.");
         player.sendMessage(ChatColor.GOLD + "/countdown resume - Resume your countdown.");
         player.sendMessage(ChatColor.GOLD + "/countdown reset - Reset your countdown.");
+        player.sendMessage(ChatColor.GOLD + "/countdown reload - Reload the config.");
     }
 }
 

@@ -1,2 +1,9 @@
 bossbar-color: BLUE
 text-color: WHITE
+messages:
+  countdown-started: "&aCountdown started!"
+  countdown-finished: "&cCountdown finished!"
+  countdown-reloaded: "&eConfiguration reloaded!"
+bossbar-messages:
+  countdown-started: "&aCountdown has started!"
+  countdown-finished: "&cCountdown has finished!"

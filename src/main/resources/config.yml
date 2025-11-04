@@ -1,9 +1,22 @@
+offline-countdown: true
 bossbar-color: BLUE
 text-color: WHITE
 messages:
   countdown-started: "&aCountdown started!"
   countdown-finished: "&cCountdown finished!"
   countdown-reloaded: "&eConfiguration reloaded!"
+  countdown-paused: "&eCountdown paused."
+  countdown-resumed: "&aCountdown resumed."
+  countdown-cancelled: "&cYour countdown has been cancelled."
+  countdown-cancelled-by-admin: "&cAn admin has cancelled your countdown."
+  admin-countdown-cancelled: "&cYou have cancelled the countdown for {player}."
+  time-added: "&a{time} has been added to your countdown."
+  time-removed: "&c{time} has been removed from your countdown."
+  time-added-by-admin: "&aAn admin added {time} to your countdown."
+  time-removed-by-admin: "&cAn admin removed {time} from your countdown."
+  admin-time-added: "&aYou added {time} to {player}\'s countdown."
+  admin-time-removed: "&cYou removed {time} from {player}\'s countdown."
 bossbar-messages:
   countdown-started: "&aCountdown has started!"
   countdown-finished: "&cCountdown has finished!"
+  bossbar-prefix: "Countdown: "

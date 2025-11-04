@@ -1,7 +1,7 @@
 name: AurexCountdown
-version: 1.0.0
+version: 1.1.0
 main: com.example.demo.AurexCountdown
-api-version: 1.21
+api-version: '1.21'
 description: A simple countdown plugin for players.
 commands:
   countdown:
@@ -23,6 +23,18 @@ permissions:
   countdown.reset:
     description: Allows a player to reset their countdown.
     default: true
+  countdown.cancel:
+    description: Allows a player to cancel their countdown.
+    default: true
+  countdown.add:
+    description: Allows a player to add time to their countdown.
+    default: true
+  countdown.remove:
+    description: Allows a player to remove time from their countdown.
+    default: true
+  countdown.reload:
+    description: Allows a player to reload the config.
+    default: op
   countdown.admin:
     description: Allows an admin to control other players' countdowns.
     default: op
